@@ -40,31 +40,70 @@ inquirer
       type: "input",
       name: "officeNumber",
       message: "What is the team manager's office number?",
-    },
+    }
+  ])
+  .then((answers) => {
 
-//   .then((data) => {
-//     const manager = new Manager(
-//       data.name,
-//       data.id,
-//       data.email,
-//       data.officeNumber
-//     );  
-    
-    
-//   });
+    console.log("Team profile generated!" + answers.name);
+    const manager = new Manager(answers.name, answers.id, answers.email, answers.officeNumber);
 
+    console.log(manager);
+    selectUsersFromMenu();   
+
+  });
+
+const selectUsersFromMenu = () => {
+
+  inquirer
+  .prompt([
     {
-      type: "confirm",
-      name: "again",
-      message: "Do you want to add another employee?",
+      type: "list",
+      name: "menu",
+      message: "Please select an option:",
+      choices: ["engineer", "intern", "Finish building the team"],
     },
   ])
-  .then((again) =>{
+  .then((answers) => {
+    if (answers.menu === "engineer") {
+      Engineer();
+    } else if (answers.menu === "intern") {
+      // Handle adding an intern
+    } else if (answers.menu === "Finish building the team") {
+      // Handle finishing building the team
+    }
+  })
+  .catch((error) => {
+    console.log(error);
+  });
 
-  if (again) {
-    console.log(again);
-  } else {
-    // Generate HTML here
-    console.log("Team profile generated!");
-  }
-})
+}
+
+const Engineer = () => {
+  inquirer
+    .prompt([
+      {
+        type: 'input',
+        name: 'name',
+        message: "Engineer's name:",
+      },
+      {
+        type: 'input',
+        name: 'id',
+        message: "Engineer's employee ID:",
+      },
+      {
+        type: 'input',
+        name: 'email',
+        message: "Engineer's email address:",
+      },
+      {
+        type: 'input',
+        name: 'github',
+        message: "Engineer's GitHub username:",
+      },
+    ])
+    .then((engineerAnswers) => {
+      const engineer = new Engineer(engineerAnswers.name, engineerAnswers.id, engineerAnswers.email, engineerAnswers.github);
+      console.log(engineer)
+    });
+}
