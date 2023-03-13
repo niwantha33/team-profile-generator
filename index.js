@@ -18,7 +18,7 @@ const render = require("./src/page-template.js");
 
 // TODO: Write Code to gather information about the development team members, and render the HTML file.
 
-const team =[]
+const team = []
 
 inquirer
   .prompt([
@@ -52,35 +52,36 @@ inquirer
 
     team.push(manager)
 
-    selectUsersFromMenu();   
+    selectUsersFromMenu();
 
   });
 
 const selectUsersFromMenu = () => {
 
   inquirer
-  .prompt([
-    {
-      type: "list",
-      name: "menu",
-      message: "Please select an option:",
-      choices: ["engineer", "intern", "Finish building the team"],
-    },
-  ])
-  .then((answers) => {
-    if (answers.menu === "engineer") {
-      addEngineer();
-    } else if (answers.menu === "intern") {
-      addIntern();
-    } else if (answers.menu === "Finish building the team") {
-      const html = render(team)
+    .prompt([
+      {
+        type: "list",
+        name: "menu",
+        message: "Please select an option:",
+        choices: ["engineer", "intern", "Finish building the team"],
+      },
+    ])
+    .then((answers) => {
+      if (answers.menu === "engineer") {
+        addEngineer();
+      } else if (answers.menu === "intern") {
+        addIntern();
+      } else if (answers.menu === "Finish building the team") {
+        const html = render(team)
 
-      console.log(html)
-    }
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+        createTeamHTMLPage(html)
+
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 
 }
 
@@ -143,10 +144,27 @@ const addIntern = () => {
     ])
     .then((answers) => {
       const intern = new Intern(answers.name, answers.id, answers.email, answers.school);
-     
-      
+
+
       console.log(intern);
       team.push(intern)
       selectUsersFromMenu();
     });
+}
+
+const createTeamHTMLPage = (html) => {
+  // check the output dir. 
+  if (!fs.existsSync(OUTPUT_DIR)) {
+    fs.mkdirSync(OUTPUT_DIR);
+  }
+
+  // Write the HTML content to a file
+  fs.writeFile(outputPath, html, (err) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log('HTML page written successfully!');
+    }
+  });
+
 }
